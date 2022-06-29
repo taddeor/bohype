@@ -1,0 +1,38 @@
+spring:
+  h2:
+    console.path: /h2-console
+    console.settings.trace: false
+    spring.h2.console.settings.web-allow-others: false
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+
+start:
+  work:
+    hour: 09:00
+
+end:
+  work:
+    hour: 18:00
+
+springdoc:
+  packagesToScan: com.weather.controller
+  swagger-ui:
+    path: /swagger-ui.html
+application:
+  swagger:
+    description: Documentation for weather service Service © 2020 RT
+
+
+server:
+  port: 8082
+  max-http-header-size: 16KB
+
+
+

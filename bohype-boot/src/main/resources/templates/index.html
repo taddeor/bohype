@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>WELCOME :<span th:text="${logedin}"></span> </h1>
+<h1><form method="GET" action="http://auth-server:8081/idp/oauth/logout">
+    <input type="submit"/>
+</form>
+</h1>
+</body>
+</html>
