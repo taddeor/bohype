@@ -1,16 +1,216 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>index</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        /* Remove the navbar's default margin-bottom and rounded borders */
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 450px}
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height:auto;}
+        }
+    </style>
 </head>
 <body>
 
-<h1>WELCOME :<span th:text="${logedin}"></span> </h1>
-<h1><form method="GET" action="http://auth-server:8081/idp/oauth/logout">
-    <input type="submit"/>
-</form>
-</h1>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Logo</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid text-center">
+    <div class="row content">
+
+        <div class="col-sm-8 text-left">
+            <h1>Welcome in Bookmark generator</h1>
+            <p>Lorem ipsum dolor sit amet</p>
+            <hr>
+            <h2>Bordered Table</h2>
+            <p>The .table-bordered class adds borders to a table:</p>
+            <button type="button" class="btn btn-primary">Export</button>
+            <button type="button" class="btn btn-primary" onclick="loadData()">Reload</button>
+
+            <form id="insert" class="form-inline">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title"/>
+                </div>
+                <div class="form-group">
+                    <label for="link">Link:</label>
+                    <input type="text" id="link" name="link"/>
+                </div>
+                <div class="form-group">
+                    <label for="folder">Folder:</label>
+                    <input type="text" id="folder" name="folder"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Insert</button>
+            </form>
+
+
+            <form id="upload" class="form-inline">
+                <div class="form-group">
+                    <label for="csv">File:</label>
+                    <input id="csv" name="csv" type="file" />
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+
+            <br />
+            <hr>
+            <table class="table table-bordered" id="tBookmark">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Link</th>
+                    <th>Folder</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function loadData(){
+        fetch("bookmarks",
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': getCookie("credential")
+                },
+                method: "GET"
+            }
+        )
+        .then(response => response.json())
+        .then(data => {
+                $("#tBookmark tbody").empty()
+                data.forEach(function(d, index) {
+                    var row = "<tr><td>"+d.title+"</td><td>"+d.link+"</td><td>"+d.folder+"</td></tr>";
+                    $("#tBookmark tbody").append(row);
+                });
+        } );
+    }
+
+
+    $(function(){
+        const form = document.getElementById('insert');
+        form.onsubmit = function(event){
+            let titleValue = document.getElementById('title').value;
+            let linkValue = document.getElementById('link').value;
+            let folderValue = document.getElementById('folder').value;
+            let bodyForm = { title: titleValue , link: linkValue ,folder: folderValue };
+            fetch("/bookmarks",
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': getCookie("credential")
+                    },
+                    body: JSON.stringify(bodyForm),
+                    method: "post",
+                })
+                .then(loadData);
+
+            //Don't submit the form.
+            return false;
+        }
+
+
+
+        $("#upload").submit(function(evt){
+            evt.preventDefault();
+            let formData = new FormData();
+            let file = evt.target['csv'].files[0];
+            formData.append("document",file);
+
+            $.ajax({
+                url: "/bookmarks/upload",
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('Authorization', getCookie("credential"));
+                },
+                success: function (response) {
+                    loadData()
+                }
+            });
+
+            return false;
+        });
+
+
+
+
+    });
+</script>
 </body>
 </html>

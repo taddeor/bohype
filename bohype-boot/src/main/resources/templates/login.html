@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>index</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        /* Remove the navbar's default margin-bottom and rounded borders */
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 450px}
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height:auto;}
+        }
+    </style>
+</head>
+<body>
+
+
+<div style="margin-top: 50px">
+
+    <div  th:if="${loginError}">
+        <div style="color: red; margin-left: 300px">Login fallito! Hai inserito username o password errati.</div>
+    </div>
+
+    <form class="form-horizontal" id="login" action="#" th:action="@{/pre-login}" method="post" th:onsubmit="submitForm()" th:object="${credential}">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email address:</label>
+            <div class="col-sm-2">
+                <input type="email" class="form-control" id="email" th:field="*{username}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="pwd">Password:</label>
+            <div class="col-sm-2">
+                <input type="password" class="form-control" id="pwd" th:field="*{password}">
+            </div>
+        </div>
+
+        <div class="col-sm-offset-2 col-sm-2">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function make_base_auth(user, password) {
+        var tok = user + ':' + password;
+        var hash = btoa(tok);
+        return "Basic " + hash;
+    }
+    function submitForm(){
+        var username = $("#login input#email").val();
+        var password = $("#login input#pwd").val();
+        setCookie("credential", make_base_auth(username,password));
+    }
+    // $(function(){
+    //     $("#login").submit(function(evt){
+    //         var username = $("#login input#email").val();
+    //         var password = $("#login input#pwd").val();
+    //         setCookie("credential", make_base_auth(username,password));
+    //         // location.href="/index"
+    //         let bodyForm = { username: username , password: password };
+    //         evt.submit();
+    //
+    //         // evt.preventDefault();
+    //         // $.ajax
+    //         // ({
+    //         //     type: "POST",
+    //         //     contentType: 'application/json',
+    //         //     url: "/pre-login",
+    //         //     dataType: 'json',
+    //         //     async: false,
+    //         //     data: JSON.stringify(bodyForm),
+    //         // });
+    //         //
+    //         // return false;
+    //     });
+    // });
+</script>
+</body>
+</html>
