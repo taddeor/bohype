@@ -54,6 +54,11 @@ public class BookMarkRestController {
         }
     }
 
+    @PostMapping(value = "/bookmarks/export")
+    public void exportBookMarks(){
+        final var bookmarks = bookmarkRepository.findAll();
+
+    }
 
     @PostMapping(value = "/bookmarks/upload", produces = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public void postUploadBookmark( @RequestPart MultipartFile document ) throws IOException {
@@ -64,7 +69,7 @@ public class BookMarkRestController {
             //no duplicate
             final var byTitle = bookmarkRepository.findByTitleAndLink(bookmarkBean.getTitle(), bookmarkBean.getLink());
             if (byTitle.isEmpty()) {
-                bookmarkRepository.save(byTitle.get());
+                bookmarkRepository.save( mappingBean().apply(bookmarkBean));
             }
         }
     }

@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.11.1</jackson.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.22</lombok.version>
         <spring.boot.version>2.7.0</spring.boot.version>
     </properties>
 
@@ -99,7 +99,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.9.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -110,16 +110,6 @@
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
                             </path>
-<!--                            <path>-->
-<!--                                <groupId>org.mapstruct</groupId>-->
-<!--                                <artifactId>mapstruct-processor</artifactId>-->
-<!--                                <version>${mapstruct.version}</version>-->
-<!--                            </path>-->
-<!--                            <path>-->
-<!--                                <groupId>org.hibernate</groupId>-->
-<!--                                <artifactId>hibernate-jpamodelgen</artifactId>-->
-<!--                                <version>${hibernate.version}</version>-->
-<!--                            </path>-->
                         </annotationProcessorPaths>
                 </configuration>
             </plugin>

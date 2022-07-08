@@ -18,19 +18,19 @@ import javax.servlet.http.HttpServletRequest;
 public class MainController {
     private final BoUserDetailService boUserDetailService;
     private BCryptPasswordEncoder bCryptPasswordEncoder =new BCryptPasswordEncoder();
-    @GetMapping("/index")
+    @GetMapping("/home")
     public String index(){
-        return "index";
+        return "home";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/index")
     public String login(HttpServletRequest request, Model model){
         var error = request.getParameter("error");
         if (null != error) {
             model.addAttribute("loginError", true);
         }
         model.addAttribute("credential",new CredentialBean());
-        return "login";
+        return "index";
     }
 
     @PostMapping("/pre-login")
@@ -38,10 +38,10 @@ public class MainController {
         final var userDetails = boUserDetailService.loadUserByUsername(credentialBean.getUsername());
         if(userDetails != null){
             if (!bCryptPasswordEncoder.matches(credentialBean.getPassword(),userDetails.getPassword() )) {
-                return "redirect:/login?error";
+                return "redirect:/index?error";
             }
         }
-        return "redirect:/index";
+        return "redirect:/home";
     }
 
 
